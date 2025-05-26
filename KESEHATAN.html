@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pendataan Perizinan Pulang Kesehatan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            color: #234d20;
+        }
+        .page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            flex-direction: column;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .hidden {
+            display: none;
+        }
+        #dashboard {
+            background: linear-gradient(145deg, #e6f4ea, #b9e0b0);
+            padding: 50px 70px;
+            border-radius: 20px;
+            box-shadow: 0 12px 25px rgba(34, 77, 32, 0.3);
+            max-width: 520px;
+            width: 100%;
+            color: #2c5d22;
+            margin: auto;
+        }
+        #dashboard h1 {
+            font-weight: 800;
+            margin: 0 0 0 0;
+            line-height: 1.2;
+            user-select: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        #dashboard #keSehatan {
+            font-size: 3rem;
+            white-space: normal;
+        }
+        #dashboard #ppRiyadhul {
+            font-size: 2.5rem;
+            margin: 10px 0 40px 0; /* space below PP. RIYADHUL */
+            white-space: normal;
+        }
+        #dashboard #locationLine {
+            font-size: 7px;
+            display: block;
+            margin-top: 40px;
+            user-select: none;
+        }
+        #dashboard button {
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(46,125,50,0.5);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+        }
+        #dashboard button:hover {
+            background: linear-gradient(135deg, #66bb6a, #388e3c);
+            box-shadow: 0 8px 18px rgba(34,77,32,0.7);
+        }
+        /* rest unchanged, omitted for brevity */
+        #appContainer {
+            background: linear-gradient(145deg, #f1f8f3, #ccedc0);
+            border-radius: 20px;
+            box-shadow: 0 12px 25px rgba(34,77,32,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px 50px;
+            text-align: left;
+            color: #2e5d1a;
+            margin: auto;
+        }
+        #appContainer h1 {
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: #3b6e1c;
+            font-size: 2.2rem;
+            line-height: 1.2;
+            white-space: pre-line;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
+        }
+        form {
+            margin-top: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px 35px;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            color: #3a6119;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid #a8d08d;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #f9fff4;
+            box-sizing: border-box;
+            font-weight: 500;
+            color: #2a4d14;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 8px rgba(76,175,80,0.6);
+            background-color: #f0ffea;
+        }
+        textarea {
+            resize: vertical;
+            grid-column: span 2;
+            min-height: 100px;
+        }
+        button {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            font-weight: 700;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 12px 12px 0;
+            box-shadow: 0 6px 12px rgba(46,125,50,0.5);
+            user-select: none;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #66bb6a, #388e3c);
+            box-shadow: 0 8px 18px rgba(46,125,50,0.7);
+        }
+        .buttons-wrapper {
+            grid-column: span 2;
+            text-align: center;
+            margin-top: 28px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 40px;
+            font-size: 0.95rem;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background-color: #f9fff4;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #d1e7b8;
+            font-weight: 600;
+            color: #375222;
+        }
+        th {
+            background: linear-gradient(135deg, #74c476, #2e7d32);
+            color: white;
+            font-weight: 700;
+            box-shadow: inset 0 -3px 6px rgba(0,0,0,0.15);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover {
+            background-color: #e4f5d4;
+        }
+        td.checkbox-cell, th.checkbox-cell {
+            text-align: center;
+            width: 44px;
+        }
+        .btn-delete, #deleteSelectedBtn {
+            background: linear-gradient(135deg, #d32f2f, #9a2525);
+            padding: 7px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(211,47,47,0.6);
+            border: none;
+            color: white;
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+        .btn-delete:hover, #deleteSelectedBtn:hover {
+            background: linear-gradient(135deg, #f44336, #b71c1c);
+            box-shadow: 0 5px 18px rgba(244,67,54,0.8);
+        }
+        #clearAllBtn {
+            background: linear-gradient(135deg, #f57c00, #b25e00);
+            padding: 7px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(245,124,0,0.6);
+            border: none;
+            color: white;
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+        #clearAllBtn:hover {
+            background: linear-gradient(135deg, #ff9800, #8d5200);
+            box-shadow: 0 5px 18px rgba(255,152,0,0.8);
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 36px;
+            font-size: 0.85rem;
+            color: #6a8e3a;
+            font-style: italic;
+            user-select: none;
+        }
+        @media (max-width: 600px) {
+            #dashboard {
+                padding: 30px 40px;
+            }
+            #dashboard h1 {
+                font-size: 2rem;
+            }
+            #dashboard button {
+                padding: 14px 36px;
+                font-size: 1.1rem;
+            }
+            #appContainer {
+                padding: 25px 30px;
+            }
+            form {
+                grid-template-columns: 1fr;
+            }
+            textarea {
+                grid-column: span 1;
+                min-height: 90px;
+            }
+            button {
+                margin: 0 0 12px 0;
+                width: 100%;
+                font-size: 1rem;
+                padding: 14px 0;
+            }
+            .buttons-wrapper {
+                grid-column: span 1;
+                margin-top: 24px;
+            }
+            table {
+                font-size: 0.85rem;
+            }
+            th, td {
+                padding: 12px 10px;
+            }
+            th.checkbox-cell, td.checkbox-cell {
+                width: 36px;
+            }
+        }
+        #chartSection {
+            margin-top: 40px;
+            background: #f9fff4;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(46,125,50,0.15);
+        }
+        #chartSection h2 {
+            color: #3b6e1c;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        #filterWrapper {
+            max-width: 300px;
+            margin: 0 auto 24px;
+            text-align: center;
+        }
+        #monthFilter {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border-radius: 12px;
+            border: 2px solid #a8d08d;
+            background-color: #f0ffea;
+            font-weight: 600;
+            color: #2a4d14;
+            outline: none;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+        #monthFilter:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 8px rgba(76,175,80,0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Page -->
+    <div id="dashboard" class="page">
+        <h1>
+            <span id="keSehatan">KESEHATAN</span><br />
+            <span id="ppRiyadhul">PP. RIYADHUL ALIYYAH</span><br /><br />
+            <span id="locationLine">Cisempur-Caringin-Bogor</span>
+        </h1>
+        <button id="enterBtn">Masuk</button>
+    </div>
+
+    <!-- Application Page -->
+    <div id="appContainer" class="page hidden" >
+        <h1>Pendataan Perizinan Pulang Kesehatan</h1>
+        <form id="izinForm" autocomplete="off" spellcheck="false">
+            <div>
+                <label for="nama">Nama</label>
+                <input type="text" id="nama" name="nama" required autofocus />
+            </div>
+            <div>
+                <label for="kelas">Kelas</label>
+                <select id="kelas" name="kelas" required>
+                    <option value="">Pilih Kelas</option>
+                    <option value="1 MTs">1 MTs</option>
+                    <option value="2 MTs">2 MTs</option>
+                    <option value="3 MTs">3 MTs</option>
+                    <option value="1 MA">1 MA</option>
+                    <option value="2 MA">2 MA</option>
+                    <option value="3 MA">3 MA</option>
+                </select>
+            </div>
+            <div>
+                <label for="kobong">Kobong Berapa</label>
+                <input type="number" id="kobong" name="kobong" min="1" required />
+            </div>
+            <div>
+                <label for="sakit">Sakit Apa</label>
+                <input type="text" id="sakit" name="sakit" required />
+            </div>
+            <div>
+                <label for="diberikanIzinDari">Diberikan Izin Dari</label>
+                <input type="date" id="diberikanIzinDari" name="diberikanIzinDari" required />
+            </div>
+            <div>
+                <label for="diberikanIzinSampai">Diberikan Izin Sampai</label>
+                <input type="date" id="diberikanIzinSampai" name="diberikanIzinSampai" required />
+            </div>
+            <div>
+                <label for="yangMengizinkan">Yang Mengizinkan</label>
+                <select id="yangMengizinkan" name="yangMengizinkan" required>
+                    <option value="">Pilih Yang Mengizinkan</option>
+                    <option value="Mg Yunus">Mg Yunus</option>
+                    <option value="Mg Rehan">Mg Rehan</option>
+                    <option value="Mg Hasbi">Mg Hasbi</option>
+                    <option value="Mg Opang">Mg Opang</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                </select>
+            </div>
+            <div style="grid-column: span 2;">
+                <label for="keterangan">Keterangan</label>
+                <textarea id="keterangan" name="keterangan"></textarea>
+            </div>
+
+            <div class="buttons-wrapper">
+                <button type="submit">Tambahkan Data</button>
+                <button type="button" id="downloadBtn">Download Excel</button>
+                <button type="button" id="deleteSelectedBtn">Hapus Terpilih</button>
+                <button type="button" id="clearAllBtn">Hapus Semua</button>
+            </div>
+        </form>
+
+        <table id="dataTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"><input type="checkbox" id="selectAllCheckbox" title="Pilih Semua"/></th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Kobong Berapa</th>
+                    <th>Sakit Apa</th>
+                    <th>Diberikan Izin Dari</th>
+                    <th>Diberikan Izin Sampai</th>
+                    <th>Yang Mengizinkan</th>
+                    <th>Keterangan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <p class="footer-note">* Data disimpan permanen di browser menggunakan localStorage, dan bisa dihapus menggunakan tombol atau menghapus semua.</p>
+
+        <div id="chartSection">
+            <h2>Diagram Perizinan Per Bulan (Tahun <span id="chartYear"></span>)</h2>
+            <div id="filterWrapper">
+                <select id="monthFilter" title="Pilih Bulan">
+                    <option value="all">Semua Bulan</option>
+                    <option value="01">Januari</option>
+                    <option value="02">Februari</option>
+                    <option value="03">Maret</option>
+                    <option value="04">April</option>
+                    <option value="05">Mei</option>
+                    <option value="06">Juni</option>
+                    <option value="07">Juli</option>
+                    <option value="08">Agustus</option>
+                    <option value="09">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+            </div>
+            <canvas id="izinChart" style="max-width:100%;height:320px;"></canvas>
+        </div>
+    </div>
+
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+    const dashboard = document.getElementById('dashboard');
+    const appContainer = document.getElementById('appContainer');
+    const enterBtn = document.getElementById('enterBtn');
+
+    enterBtn.addEventListener('click', () => {
+        dashboard.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+        document.getElementById('nama').focus();
+        renderTable();
+        updateChart();
+    });
+
+    const form = document.getElementById('izinForm');
+    const dataTable = document.getElementById('dataTable');
+    const tbody = dataTable.querySelector('tbody');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const monthFilter = document.getElementById('monthFilter');
+    const chartYearLabel = document.getElementById('chartYear');
+
+    const STORAGE_KEY = 'pendataanIzinSantriData';
+    let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let chartInstance = null;
+
+    function saveEntries() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }
+    function clearForm() {
+        form.reset();
+    }
+    function renderTable() {
+        if (entries.length === 0) {
+            dataTable.style.display = 'none';
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            return;
+        }
+        dataTable.style.display = '';
+        tbody.innerHTML = '';
+        entries.forEach((entry, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="checkbox-cell"><input type="checkbox" class="rowCheckbox" data-idx="${idx}" title="Pilih Baris"/></td>
+                <td>${entry.nama}</td>
+                <td>${entry.kelas}</td>
+                <td>${entry.kobong}</td>
+                <td>${entry.sakit}</td>
+                <td>${entry.diberikanIzinDari}</td>
+                <td>${entry.diberikanIzinSampai}</td>
+                <td>${entry.yangMengizinkan}</td>
+                <td>${entry.keterangan}</td>
+                <td><button class="btn-delete" data-idx="${idx}" title="Hapus Data">Hapus</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        bindDeleteButtons();
+        bindRowCheckboxes();
+        updateSelectAllCheckbox();
+    }
+    function bindDeleteButtons() {
+        const deleteButtons = tbody.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.getAttribute('data-idx'));
+                if (confirm('Yakin ingin menghapus data ini?')) {
+                    entries.splice(index, 1);
+                    saveEntries();
+                    renderTable();
+                    updateChart();
+                }
+            });
+        });
+    }
+    function bindRowCheckboxes() {
+        const rowCheckboxes = tbody.querySelectorAll('.rowCheckbox');
+        rowCheckboxes.forEach(chk => {
+            chk.addEventListener('change', function () {
+                updateSelectAllCheckbox();
+            });
+        });
+    }
+    function updateSelectAllCheckbox() {
+        const rowCheckboxes = tbody.querySelectorAll('.rowCheckbox');
+        if (rowCheckboxes.length === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            return;
+        }
+        const checkedCount = Array.from(rowCheckboxes).filter(chk => chk.checked).length;
+        if (checkedCount === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else if (checkedCount === rowCheckboxes.length) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+        }
+    }
+    selectAllCheckbox.addEventListener('change', function () {
+        const rowCheckboxes = tbody.querySelectorAll('.rowCheckbox');
+        rowCheckboxes.forEach(chk => {
+            chk.checked = selectAllCheckbox.checked;
+        });
+    });
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const newEntry = {
+            nama: formData.get('nama').trim(),
+            kelas: formData.get('kelas').trim(),
+            kobong: formData.get('kobong'),
+            sakit: formData.get('sakit').trim(),
+            diberikanIzinDari: formData.get('diberikanIzinDari'),
+            diberikanIzinSampai: formData.get('diberikanIzinSampai'),
+            yangMengizinkan: formData.get('yangMengizinkan'),
+            keterangan: formData.get('keterangan').trim()
+        };
+        if (newEntry.diberikanIzinSampai < newEntry.diberikanIzinDari) {
+            alert("Tanggal 'Diberikan Izin Sampai' tidak boleh lebih awal dari 'Diberikan Izin Dari'.");
+            return;
+        }
+        entries.push(newEntry);
+        saveEntries();
+        renderTable();
+        updateChart();
+        clearForm();
+        form.elements['nama'].focus();
+    });
+    downloadBtn.addEventListener('click', function() {
+        if (entries.length === 0) {
+            alert('Belum ada data untuk diunduh.');
+            return;
+        }
+        const wsData = [
+            ["Nama", "Kelas", "Kobong Berapa", "Sakit Apa", "Diberikan Izin Dari", "Diberikan Izin Sampai", "Yang Mengizinkan", "Keterangan"],
+            ...entries.map(e => [
+                e.nama,
+                e.kelas,
+                e.kobong,
+                e.sakit,
+                e.diberikanIzinDari,
+                e.diberikanIzinSampai,
+                e.yangMengizinkan,
+                e.keterangan
+            ])
+        ];
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Pendataan Perizinan Pulang Kesehatan");
+        XLSX.writeFile(wb, "pendataan_perizinan_pulang_kesehatan.xlsx");
+    });
+    deleteSelectedBtn.addEventListener('click', function () {
+        const checkedCheckboxes = Array.from(tbody.querySelectorAll('.rowCheckbox:checked'));
+        if (checkedCheckboxes.length === 0) {
+            alert('Pilih data yang ingin dihapus terlebih dahulu.');
+            return;
+        }
+        if (!confirm(`Yakin ingin menghapus ${checkedCheckboxes.length} data terpilih?`)) {
+            return;
+        }
+        const indices = checkedCheckboxes.map(chk => parseInt(chk.getAttribute('data-idx'))).sort((a,b) => b - a);
+        indices.forEach(idx => {
+            entries.splice(idx, 1);
+        });
+        saveEntries();
+        renderTable();
+        updateChart();
+    });
+    clearAllBtn.addEventListener('click', function() {
+        if (entries.length === 0) {
+            alert('Tidak ada data yang perlu dihapus.');
+            return;
+        }
+        if (confirm('Yakin ingin menghapus semua data? Tindakan ini tidak bisa dibatalkan.')) {
+            entries = [];
+            saveEntries();
+            renderTable();
+            updateChart();
+        }
+    });
+
+    // Chart.js setup and update
+    const ctx = document.getElementById('izinChart').getContext('2d');
+    function generateChartData(filterMonth, filterYear) {
+        const chartDataMap = new Map();
+        if (filterMonth === 'all') {
+            for (let m = 1; m <= 12; m++) {
+                chartDataMap.set(String(m).padStart(2, '0'), 0);
+            }
+            entries.forEach(e => {
+                const d = new Date(e.diberikanIzinDari);
+                if (d.getFullYear() === filterYear) {
+                    const mon = String(d.getMonth() + 1).padStart(2, '0');
+                    chartDataMap.set(mon, (chartDataMap.get(mon) || 0) + 1);
+                }
+            });
+            const labels = Array.from(chartDataMap.keys()).map(m => {
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+                return monthNames[Number(m)-1];
+            });
+            const data = Array.from(chartDataMap.values());
+            return {labels, data};
+        } else {
+            const kelasCounts = {};
+            entries.forEach(e => {
+                const d = new Date(e.diberikanIzinDari);
+                if (d.getFullYear() === filterYear && (String(d.getMonth()+1).padStart(2,'0') === filterMonth)) {
+                    kelasCounts[e.kelas] = (kelasCounts[e.kelas] || 0) + 1;
+                }
+            });
+            const labels = Object.keys(kelasCounts);
+            const data = Object.values(kelasCounts);
+            return {labels, data};
+        }
+    }
+    function updateChart() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        chartYearLabel.textContent = currentYear;
+        let filterMonth = monthFilter.value;
+        const chartData = generateChartData(filterMonth, currentYear);
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels.length ? chartData.labels : ['Tidak Ada Data'],
+                datasets: [{
+                    label: filterMonth === 'all' ? 'Jumlah Izin per Bulan' : 'Jumlah Izin per Kelas',
+                    data: chartData.data.length ? chartData.data : [0],
+                    backgroundColor: '#4caf50'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        precision: 0,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { display: true, labels: { font: { weight: 'bold' }, color: '#2e7d32' } },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    }
+    monthFilter.addEventListener('change', updateChart);
+
+})();
+</script>
+</body>
+</html>
